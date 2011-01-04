@@ -10,7 +10,7 @@ class DB {
 		$this->__connect();
 	}
 
-	static public function get() {
+	static public function getInstance() {
 		return new self();
 	}
 

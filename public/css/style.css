@@ -1,0 +1,41 @@
+body {
+	font-size: 0.8em;
+	font-family: 'Arial', sans-serif
+}
+
+a {
+	color: #000000;
+}
+
+td {
+	font-size: 0.8em;
+	padding: 3px 5px;
+	border: 1px solid #000000;
+	text-align: center;
+}
+
+tr {
+	background-color: #EEEEEE;
+}
+
+tr:hover {
+	background-color: #DDDDDD;
+}
+
+table.list {
+	width: 100%;
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.menu {
+	margin: 15px 10px;
+}
+
+.error {
+	color: #CC0000;
+	font-weight: bold;
+	background-color: #FFCC99;
+}
