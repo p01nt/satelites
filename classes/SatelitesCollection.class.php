@@ -88,6 +88,17 @@ class SatelitesCollection implements Iterator {
 		return $amount;
 	}
 
+	public function countWrongNeedNS() {
+		$amount = 0;
+		foreach ($this->array as $item) {
+			if ($item->isMy() && !$item->ns()->isMyIPOnNeedNS()) {
+				$amount ++;
+			}
+		}
+
+		return $amount;
+	}
+
 	public function countWrongWhois() {
 		$amount = 0;
 		foreach ($this->array as $item) {

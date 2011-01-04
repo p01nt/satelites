@@ -24,6 +24,7 @@
 			<tr><td>Not registred: </td><td>{$satelites->countFree()}</td></tr>
 			<tr class="error"><td>Wrong IP: </td><td>{$satelites->countWrongIP()}</td></tr>
 			<tr class="error"><td>Wrong NS: </td><td>{$satelites->countWrongNS()}</td></tr>
+			<tr class="error"><td>Wrong needed NS: </td><td>{$satelites->countWrongNeedNS()}</td></tr>
 			<tr class="error"><td>Wrong WhoIs: </td><td>{$satelites->countWrongWhois()}</td></tr>
 			<tr><td>Total: </td><td>{$satelites->countTotal()}</td></tr>
 		</table>
@@ -47,6 +48,7 @@
 					<td>{$satelite->getName()}</td>
 					<td class="{if !$satelite->whois()->isMyNS()}error{/if}">{$satelite->whois()->printNS()}</td>
 					<td class="{if !$satelite->ns()->isMyIP()}error{/if}">{$satelite->ns()->getIP()}</td>
+					<td class="{if !$satelite->ns()->isMyIPOnNeedNS()}error{/if}">{$satelite->ns()->printBadNeedNS()}</td>
 					<td>{$satelite->blog()->issetDatabase()}</td>
 					<td>{$satelite->blog()->postsAmount()}</td>
 				</tr>
