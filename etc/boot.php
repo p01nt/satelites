@@ -12,9 +12,12 @@
 	$smarty->template_dir = BASE . '/templates/';
 	$smarty->compile_dir = BASE . '/tmp/templates_c/';
 
-	$db = DB::get();
+	$db = DB::getInstance();
 	$db->set_master_host($config['master']['host'], $config['master']['user'], $config['master']['password']);
 	$db->set_database($config['database']['name']);
+
+	$memcache = Memcache::getInstance();
+	$memcache->addServer();
 
 	function __autoload($classname) {
 		$file = BASE . '/classes/' . $classname . '.class.php';
