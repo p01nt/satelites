@@ -17,7 +17,9 @@
 	$db->set_database($config['database']['name']);
 
 	$memcache = Memcache::getInstance();
-	$memcache->addServer();
+	foreach ($config['memcached'] as $name => $ip) {
+		$memcache->addServer($ip);
+	}
 
 	function __autoload($classname) {
 		$file = BASE . '/classes/' . $classname . '.class.php';

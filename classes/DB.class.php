@@ -1,12 +1,14 @@
 <?php
 class DB {
-	private $query = array();
-	private $fields = array();
-	private $link = null;
-	static private $master = array('host' => null, 'user' => null, 'password' => null);
-	static private $database;
+	protected $query = array();
+	protected $fields = array();
+	protected $limit = 0;
+	protected $offset = 0;
+	protected $link = null;
+	static protected $master = array('host' => null, 'user' => null, 'password' => null);
+	static protected $database;
 
-	private function __construct() {
+	protected function __construct() {
 		$this->__connect();
 	}
 
@@ -14,7 +16,7 @@ class DB {
 		return new self();
 	}
 
-	private function __connect() {
+	protected function __connect() {
 		if (!empty(self::$database)) {
 			$this->link = mysql_connect(self::$master['host'], self::$master['user'], self::$master['password']);
 			$result = mysql_select_db(self::$database, $this->link);
@@ -58,12 +60,28 @@ class DB {
 		return 	$this;
 	}
 
+	public function limit($offset, $limit = false) {
+		if (empty($limit)) {
+			$limit = $offset;
+			$offset = 0;
+		}
+
+		$this->limit = $limit;
+		$this->offset = $offset;
+
+		return $this;
+	}
+
 	public function fetch() {
 		if (empty($this->fields)) {
 			$this->query[] = '*';
 		}
 
 		$this->query[] = 'from `' . $this->table . '`';
+
+		if (!empty($this->limit)) {
+			$this->query[] = 'limit ' . $this->offset . ', ' . $this->limit;
+		}
 
 		$result = $this->query();
 

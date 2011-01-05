@@ -6,7 +6,7 @@ class Memcache {
 		return new self();
 	}
 
-	public function __construct() {
+	protected function __construct() {
 		if (!isset(self::$memcached)) {
 			self::$memcached = new Memcached();
 		}

@@ -7,12 +7,11 @@ class SatelitesCollection implements Iterator {
 	
 	public function __construct() {
 		$db = DB::getInstance();
-		$rows = $db->select()->from('satelites')->fetch();
+		$rows = $db->select()->from('satelites')->limit(25)->fetch();
 
 		foreach ($rows as $row) {
 			$this->array[] = new Satelite($row->id);
 		}
-
 	}
 
 	public function onlyOthers() {
