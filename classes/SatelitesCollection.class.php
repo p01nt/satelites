@@ -1,13 +1,14 @@
 <?php
 class SatelitesCollection implements Iterator {
-	private $position = 0;
-	private $array = array();
+	protected $position = 0;
+	protected $array = array();
+	protected $allow_wrong_whois = false;
 
 	protected $only = array();
 	
 	public function __construct() {
 		$db = DB::getInstance();
-		$rows = $db->select()->from('satelites')->limit(25)->fetch();
+		$rows = $db->select()->from('satelites')->fetch();
 
 		foreach ($rows as $row) {
 			$this->array[] = new Satelite($row->id);
@@ -29,6 +30,16 @@ class SatelitesCollection implements Iterator {
 	public function onlyFree() {
 		$this->only = array();
 		$this->only['free'] = true;
+		return $this;
+	}
+
+	public function allowWrongWhois() {
+		$this->allow_wrong_whois = true;
+		return $this;
+	}
+
+	protected function __disableWrongWhois() {
+		$this->allow_wrong_whois = false;
 		return $this;
 	}
 
@@ -132,7 +143,7 @@ class SatelitesCollection implements Iterator {
 
 		$item = $this->array[$this->position];
 
-		if ($item->whois()->isWrong() || (isset($this->only['others']) && ($item->isFree() || $item->isMy())) || (isset($this->only['my']) && ($item->isFree() || !$item->isMy())) || (isset($this->only['free']) && !$item->isFree())) {
+		if (($item->whois()->isWrong() && !$this->allow_wrong_whois) || (isset($this->only['others']) && ($item->isFree() || $item->isMy())) || (isset($this->only['my']) && ($item->isFree() || !$item->isMy())) || (isset($this->only['free']) && !$item->isFree())) {
 			$this->next();
 			return $this->valid();
 		}

@@ -1,0 +1,4 @@
+zone "%%satelite%%" {
+	type master;
+	file "/etc/namedb/master/satelites/%%satelite%%";
+};

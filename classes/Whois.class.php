@@ -21,12 +21,17 @@ class Whois {
 		$this->__renew();
 	}
 
-	private function __renew() {
+	protected function __renew() {
 		$memcache = Memcache::getInstance();
 
+		$this->data = array();
 		exec('whois ' . $this->name, $this->data);
 		$var = 'whois_' . $this->name;
 		$memcache->set($var, $this->data);
+	}
+
+	public function renew() {
+		return $this->__renew();
 	}
 
 	public function isRegistred() {
@@ -34,6 +39,9 @@ class Whois {
 	}
 
 	public function isRegister() {
+		if (!isset($this->data[4])) {
+			dd($this->data, 1);
+		}
 
 		if ($this->data[4] == '% No entries found for ' . $this->name) {
 			return false;
@@ -108,6 +116,10 @@ class Whois {
 	}
 
 	public function isWrong() {
+		if (!isset($this->data[4])) {
+			return false;
+		}
+
 		if (preg_match('/^Requests limit exceeded. Please try again later.$/', $this->data[4])) {
 			return true;
 		}

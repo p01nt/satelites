@@ -1,0 +1,15 @@
+$TTL	3600
+@		SOA	ns1	hostmaster	(
+								2010110901 ; serial (p01nt)
+								3600 ; refresh (1 hour)
+								900	; retry (30 minutes)
+								2419200 ; expire (5 weeks 6 days 16 hours)
+								3600 ; minimum (1 hour)
+							)
+
+%%satelite%%.		IN	NS	ns1.klets.name.
+%%satelite%%.		IN	NS	ns2.klets.name.
+%%satelite%%.		IN	NS	ns1.artlab-idiot.com.
+%%satelite%%.		IN	NS	ns2.artlab-idiot.com.
+%%satelite%%.		IN	A	77.120.103.96
+

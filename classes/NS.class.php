@@ -1,6 +1,7 @@
 <?php
 class NS {
 	protected $name = '';
+	protected $my_ip = '77.120.103.96';
 	protected $ip = '';
 	protected $data = array();
 	protected static $nservers = array();
@@ -15,7 +16,6 @@ class NS {
 	}
 
 	public function getIP() {
-		// exec('nslookup ' . $this->name, $this->data);
 		return false;
 	}
 
@@ -24,7 +24,7 @@ class NS {
 	}
 
 	public function isMyIP() {
-		return $this->isIP('77.120.103.11');
+		return $this->isIP($this->my_ip);
 	}
 
 	public function isIP($ip) {
@@ -36,16 +36,24 @@ class NS {
 	}
 
 	public function isMyIPOnNeedNS() {
-		return count($this->getBadNeedNS()) == 0;
+		return count($this->getBadNeedNS($this->my_ip)) == 0;
 	}
 
-	public function getBadNeedNS() {
+	public function printMyBadNeedNS() {
+		return $this->printBadNeedNS($this->my_ip);
+	}
+
+	public function getBadNeedNS($ip) {
 		$servers = array();
 		foreach (self::$nservers as $server) {
 			$this->__updateNSData($server);
 			$data = $this->data[$server];
 
-			if (preg_match('/REFUSED$/', $data[3])) {
+			if (preg_match('/(REFUSED|SERVFAIL|NXDOMAIN)$/', $data[3])) {
+				$servers[] = $server;
+			}
+
+			if (!preg_match('/^Address: ' . $ip . '$/', $data[4])) {
 				$servers[] = $server;
 			}
 		}
@@ -53,7 +61,7 @@ class NS {
 		return $servers;
 	}
 
-	public function __updateNSData($server = null) {
+	protected function __updateNSData($server = null) {
 		$memcache = Memcache::getInstance();
 
 		$var = 'ns_' . $this->name . '_' . $server;
@@ -65,9 +73,10 @@ class NS {
 		$this->__renewNSData($server);
 	}
 
-	public function __renewNSData($server = null) {
+	protected function __renewNSData($server = null) {
 		if (isset($server)) {
 			$cmd = 'nslookup ' . $this->name . ' ' . $server;
+			$data = array();
 			exec($cmd, $data);
 			$this->data[$server] = $data;
 
@@ -82,14 +91,32 @@ class NS {
 
 	}
 
-	public function printBadNeedNS() {
-		$servers = $this->getBadNeedNS();
+	public function renewNeedNS () {
+		foreach (self::$nservers as $server) {
+			$this->__renewNSData($server);
+		}
+	}
+
+	public function printBadNeedNS($ip) {
+		$servers = $this->getBadNeedNS($ip);
 
 		if (empty($servers)) {
 			return 'ok';
 		}
 
 		return implode(', ', $servers);
+	}
+
+	public function zone() {
+		$content = file_get_contents(BASE . '/samples/named.row');
+		$content = str_replace('%%satelite%%', $this->name, $content);
+		return $content;
+	}
+
+	public function zoneFile() {
+		$content = file_get_contents(BASE . '/samples/named.file');
+		$content = str_replace('%%satelite%%', $this->name, $content);
+		return $content;
 	}
 }
 ?>

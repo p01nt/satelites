@@ -38,9 +38,21 @@
 	}
 
 	function dd($var, $die = false) {
-		echo '<pre>';
+		$cli = false;
+		if (isset($_SERVER['SHELL'])) {
+			$cli = true;
+		}
+
+		if (!$cli) {
+			echo '<pre>';
+		}
+
 		var_dump($var);
-		echo '</pre>';
+
+		if (!$cli) {
+			echo '</pre>';
+		}
+
 		if ($die) {
 			die();
 		}
