@@ -22,8 +22,12 @@
 			<tr><td>Registred by others: </td><td>{$satelites->countOthers()}</td></tr>
 			<tr><td>Registred by me: </td><td>{$satelites->countMy()}</td></tr>
 			<tr><td>Not registred: </td><td>{$satelites->countFree()}</td></tr>
-			<tr class="error"><td>Wrong IP: </td><td>{$satelites->countWrongIP()}</td></tr>
-			<tr class="error"><td>Wrong NS: </td><td>{$satelites->countWrongNS()}</td></tr>
+			{if $satelites->countWrongIP() ne 0}
+				<tr class="error"><td>Wrong IP: </td><td>{$satelites->countWrongIP()}</td></tr>
+			{/if}
+			{if $satelites->countWrongNS() ne 0}
+				<tr class="error"><td>Wrong NS: </td><td>{$satelites->countWrongNS()}</td></tr>
+			{/if}
 			{if $satelites->countWrongNeedNS() ne 0}
 				<tr class="error"><td>Wrong needed NS: </td><td>{$satelites->countWrongNeedNS()}</td></tr>
 			{/if}
@@ -51,6 +55,7 @@
 					<td><a href="http://{$satelite->getName()}/" target="_blank">Go!</a></td>
 					<td>{$satelite->getName()}</td>
 					<td class="{if !$satelite->whois()->isMyNS()}error{/if}">{$satelite->whois()->printNS()}</td>
+					<td class="{if !$satelite->ns()->isMyIP()}error{/if}">{$satelite->ns()->getIP()}</td>
 					<td class="{if !$satelite->ns()->isMyIPOnNeedNS()}error{/if}">{$satelite->ns()->printMyBadNeedNS()}</td>
 					<td class="{if !$satelite->blog()->issetDatabase()}error{/if}">database {if $satelite->blog()->issetDatabase()}exists{else}non-exists{/if}</td>
 					<td class="{if $satelite->blog()->postsAmount() eq 0}error{/if}">{$satelite->blog()->postsAmount()}</td>
@@ -63,6 +68,8 @@
 				<tr>
 					<td>{$satelite->getName()}</td>
 					<td class="{if !$satelite->ns()->isMyIPOnNeedNS()}error{/if}">{$satelite->ns()->printMyBadNeedNS()}</td>
+					<td class="{if !$satelite->blog()->issetDatabase()}error{/if}">database {if $satelite->blog()->issetDatabase()}exists{else}non-exists{/if}</td>
+					<td class="{if $satelite->blog()->postsAmount() eq 0}error{/if}">{$satelite->blog()->postsAmount()}</td>
 				</tr>
 			{/foreach}
 		</table>

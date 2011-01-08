@@ -2,8 +2,9 @@
 class NS {
 	protected $name = '';
 	protected $my_ip = '77.120.103.96';
-	protected $ip = '';
+	protected $ip = '0.0.0.0';
 	protected $data = array();
+	protected $data_ip = '';
 	protected static $nservers = array();
 	
 	public function __construct($name) {
@@ -15,12 +16,39 @@ class NS {
 		self::$nservers = array('ns1.klets.name', 'ns2.klets.name', 'ns1.artlab-idiot.com', 'ns2.artlab-idiot.com');
 	}
 
-	public function getIP() {
-		return false;
+	protected function __updateIP() {
+		$memcache = Memcache::getInstance();
+
+		$var = 'ip_' . $this->name;
+		if ($memcache->exists($var)) {
+		    $this->data_ip = $memcache->get($var);
+			return $this->data_ip;
+		}
+
+		$this->__renewIP();
 	}
 
-	public function printIP() {
-		return $this->getIP();
+	protected function __renewIP() {
+		$cmd = 'nslookup ' . $this->name;
+
+		$this->data_ip = array();
+		exec($cmd, $this->data_ip);
+
+		$memcache = Memcache::getInstance();
+		$var = 'ip_' . $this->name;
+		$memcache->set($var, $this->data_ip);
+
+		return $this->data_ip;
+	}
+
+	public function getIP() {
+		$this->__updateIP();
+
+		if (preg_match('/^Address: (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/', $this->data_ip[5], $matches)) {
+			$this->ip = $matches[1];
+		}
+
+		return $this->ip;
 	}
 
 	public function isMyIP() {
@@ -28,6 +56,8 @@ class NS {
 	}
 
 	public function isIP($ip) {
+		$this->getIP();
+
 		if ($this->ip == $ip) {
 			return true;
 		}
