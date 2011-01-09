@@ -10,7 +10,7 @@ class Satelite {
 
 		$this->whois = new Whois($this->name);
 		$this->ns = new NS($this->name);
-		$this->blog = new Blog();
+		$this->blog = new Blog($this->name);
 	}
 
 	public function getName() {

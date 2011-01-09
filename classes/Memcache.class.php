@@ -37,5 +37,9 @@ class Memcache {
 	public function stats() {
 		return self::$memcached->getStats();
 	}
+
+	public function __call($method, $args) {
+		return call_user_func_array(array(self::$memcached, $method), $args);
+	}
 }
 ?>

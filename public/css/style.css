@@ -39,3 +39,20 @@ table.list {
 	font-weight: bold;
 	background-color: #FFCC99;
 }
+
+.debug {
+	position: absolute;
+	width: 50%;
+	top: 0px;
+	left: 50%;
+	border: 1px solid #000000;
+}
+
+.debug table {
+	width: 100%;
+}
+
+.debug th {
+	font-size: 0.8em;
+	border: 1px solid #000000;
+}

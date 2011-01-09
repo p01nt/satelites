@@ -3,6 +3,7 @@
 
 	error_reporting(E_ALL);
 	ini_set('display_errors', 'on');
+	$timer = new Timer();
 
 	$config = parse_ini_file(BASE . '/etc/config.ini', true);
 
@@ -11,6 +12,7 @@
 	$smarty = new Smarty();
 	$smarty->template_dir = BASE . '/templates/';
 	$smarty->compile_dir = BASE . '/tmp/templates_c/';
+	$smarty->cache_dir = BASE . '/tmp/cache/';
 
 	$db = DB::getInstance();
 	$db->set_master_host($config['master']['host'], $config['master']['user'], $config['master']['password']);
@@ -22,6 +24,10 @@
 	}
 
 	function __autoload($classname) {
+		if (defined('DISABLE_AUTOLOAD')) {
+			return;
+		}
+
 		$file = BASE . '/classes/' . $classname . '.class.php';
 
 		if (preg_match('/^Smarty_/', $classname)) {

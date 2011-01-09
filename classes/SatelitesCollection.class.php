@@ -8,7 +8,7 @@ class SatelitesCollection implements Iterator {
 	
 	public function __construct() {
 		$db = DB::getInstance();
-		$rows = $db->select()->from('satelites')->fetch();
+		$rows = $db->select()->from('satelites')->limit(500)->fetch();
 
 		foreach ($rows as $row) {
 			$this->array[] = new Satelite($row->id);
@@ -113,6 +113,83 @@ class SatelitesCollection implements Iterator {
 		$amount = 0;
 		foreach ($this->array as $item) {
 			if ($item->whois()->isWrong()) {
+				$amount ++;
+			}
+		}
+
+		return $amount;
+	}
+
+	public function countWrongDatabase() {
+		$amount = 0;
+		foreach ($this->array as $item) {
+			if (!$item->blog()->issetDatabase()) {
+				$amount ++;
+			}
+		}
+
+		return $amount;
+	}
+
+	public function countWrongPostsAmount() {
+		$amount = 0;
+		foreach ($this->array as $item) {
+			if ($item->blog()->noEnoughPosts()) {
+				$amount ++;
+			}
+		}
+
+		return $amount;
+	}
+
+	public function countWrongURL() {
+		$amount = 0;
+		foreach ($this->array as $item) {
+			if ($item->blog()->wrongURL()) {
+				$amount ++;
+			}
+		}
+
+		return $amount;
+	}
+
+	public function countWrongHomeURL() {
+		$amount = 0;
+		foreach ($this->array as $item) {
+			if ($item->blog()->wrongHomeURL()) {
+				$amount ++;
+			}
+		}
+
+		return $amount;
+	}
+
+	public function countWrongTitle() {
+		$amount = 0;
+		foreach ($this->array as $item) {
+			if ($item->blog()->wrongTitle()) {
+				$amount ++;
+			}
+		}
+
+		return $amount;
+	}
+
+	public function countWrongDescription() {
+		$amount = 0;
+		foreach ($this->array as $item) {
+			if ($item->blog()->wrongDescription()) {
+				$amount ++;
+			}
+		}
+
+		return $amount;
+	}
+
+	public function countWrongPostsPerPage() {
+		$amount = 0;
+		foreach ($this->array as $item) {
+			if ($item->blog()->wrongPostsPerPage()) {
 				$amount ++;
 			}
 		}
