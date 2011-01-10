@@ -15,6 +15,10 @@ class NS {
 	public function setServers() {
 		self::$nservers = array('ns1.klets.name', 'ns2.klets.name', 'ns1.artlab-idiot.com', 'ns2.artlab-idiot.com');
 	}
+	
+	public function getServers() {
+		return self::$nservers;
+	}
 
 	protected function __updateIP() {
 		$memcache = Memcache::getInstance();

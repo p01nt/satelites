@@ -91,9 +91,9 @@ class Whois {
 		return false;
 	}
 
-	public function isNS($nservers) {
-		$this->getNS();
-		return false;
+	public function isNS($my) {
+		$current = $this->getNS();
+		return count($current) == count(array_intersect($current, $my));
 	}
 
 	public function printNS() {
@@ -112,7 +112,10 @@ class Whois {
 	}
 
 	public function isMyNS() {
-		return $this->isNS('ns1.klets.name', 'ns2.klets.name', 'ns1.artlab-idiot.com', 'ns2.artlab-idiot.com');
+		$ns = new NS($this->name);
+		$list = $ns->getServers();
+
+		return $this->isNS($list);
 	}
 
 	public function isWrong() {
