@@ -76,7 +76,7 @@
 					<td><a href="http://{$satelite->getName()}/" target="_blank">Go!</a></td>
 					<td>{$satelite->getName()}</td>
 					<td class="{if !$satelite->whois()->isMyNS()}error{/if}">{$satelite->whois()->printNS()}</td>
-					<td class="{if !$satelite->ns()->isMyIP()}error{/if}">{$satelite->ns()->getIP()}</td>
+					<td class="{if !$satelite->ns()->isMyIP()}error{/if}">{if $satelite->ns()->getIP()}{$satelite->ns()->getIP()}{else}can't detect ip{/if}</td>
 					<td class="{if !$satelite->ns()->isMyIPOnNeedNS()}error{/if}">{$satelite->ns()->printMyBadNeedNS()}</td>
 					<td class="{if !$satelite->blog()->issetDatabase()}error{/if}">{if $satelite->blog()->issetDatabase()}{$satelite->blog()->getDBName()}{else}database non-exists{/if}</td>
 					<td class="{if $satelite->blog()->wrongURL()}error{/if}">{$satelite->blog()->getURL()}</td>
