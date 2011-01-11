@@ -3,7 +3,7 @@
 
 	$template = 'index.tpl';
 	$smarty->caching = true;
-	if (isset($argv[1]) && $argv[1] == 'update') {
+	if (isset($_GET['action']) && $_GET['action'] == 'update') {
 		$smarty->caching = false;
 	}
 

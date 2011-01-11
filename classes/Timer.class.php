@@ -8,7 +8,7 @@ class Timer {
 		$this->first_start = $this->start;
 	}
 
-	public function interval() {
+	public function interval($comment = '-') {
 		$now = microtime(true);
 		$backtrace = debug_backtrace();
 		
@@ -17,6 +17,8 @@ class Timer {
 		$interval['line'] = $backtrace[0]['line'];
 
 		$interval['time'] = $this->__prepare($now - $this->start);
+
+		$interval['comment'] = $comment;
 
 		$this->intervals[] = $interval;
 

@@ -21,7 +21,6 @@
 		<table>
 			<tr><td>Registred by others: </td><td>{$satelites->countOthers()}</td></tr>
 			<tr><td>Registred by me: </td><td>{$satelites->countMy()}</td></tr>
-			<tr><td>Not registred: </td><td>{$satelites->countFree()}</td></tr>
 			{if $satelites->countWrongIP() ne 0}
 				<tr class="error"><td>Wrong IP: </td><td>{$satelites->countWrongIP()}</td></tr>
 			{/if}
@@ -51,6 +50,10 @@
 			{/if}
 			{if $satelites->countWrongDescription() ne 0}
 				<tr class="error"><td>Wrong description: </td><td>{$satelites->countWrongDescription()}</td></tr>
+			{/if}
+			<tr><td>Not registred: </td><td>{$satelites->countFree()}</td></tr>
+			{if $satelites->countWrongWhois() ne 0}
+				<tr class="error"><td>Wrong Whois: </td><td>{$satelites->countWrongWhois()}</td></tr>
 			{/if}
 			<tr><td>Total: </td><td>{$satelites->countTotal()}</td></tr>
 		</table>
@@ -112,12 +115,14 @@
 					<tr>
 						<td>{$i}</td>
 						<td>{$interval.file}:<strong>{$interval.line}</strong></td>
+						<td>{$interval.comment}</td>
 						<td>{$interval.time}</td>
 					</tr>
 				{/foreach}
 				<tr>
-					<th colspan="2">Total</th>
+					<th colspan="3">Total</th>
 					<th>{$timer->getTotal()}</th>
+
 				</tr>
 			</table>
 		</div>

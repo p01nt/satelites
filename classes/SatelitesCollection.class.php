@@ -123,7 +123,7 @@ class SatelitesCollection implements Iterator {
 	public function countWrongDatabase() {
 		$amount = 0;
 		foreach ($this->array as $item) {
-			if (!$item->blog()->issetDatabase()) {
+			if ($item->isMy() && !$item->blog()->issetDatabase()) {
 				$amount ++;
 			}
 		}
@@ -134,7 +134,7 @@ class SatelitesCollection implements Iterator {
 	public function countWrongPostsAmount() {
 		$amount = 0;
 		foreach ($this->array as $item) {
-			if ($item->blog()->noEnoughPosts()) {
+			if ($item->isMy() && $item->blog()->noEnoughPosts()) {
 				$amount ++;
 			}
 		}
@@ -145,7 +145,7 @@ class SatelitesCollection implements Iterator {
 	public function countWrongURL() {
 		$amount = 0;
 		foreach ($this->array as $item) {
-			if ($item->blog()->wrongURL()) {
+			if ($item->isMy() && $item->blog()->wrongURL()) {
 				$amount ++;
 			}
 		}
@@ -156,7 +156,7 @@ class SatelitesCollection implements Iterator {
 	public function countWrongHomeURL() {
 		$amount = 0;
 		foreach ($this->array as $item) {
-			if ($item->blog()->wrongHomeURL()) {
+			if ($item->isMy() && $item->blog()->wrongHomeURL()) {
 				$amount ++;
 			}
 		}
@@ -167,7 +167,7 @@ class SatelitesCollection implements Iterator {
 	public function countWrongTitle() {
 		$amount = 0;
 		foreach ($this->array as $item) {
-			if ($item->blog()->wrongTitle()) {
+			if ($item->isMy() && $item->blog()->wrongTitle()) {
 				$amount ++;
 			}
 		}
@@ -178,7 +178,7 @@ class SatelitesCollection implements Iterator {
 	public function countWrongDescription() {
 		$amount = 0;
 		foreach ($this->array as $item) {
-			if ($item->blog()->wrongDescription()) {
+			if ($item->isMy() && $item->blog()->wrongDescription()) {
 				$amount ++;
 			}
 		}
@@ -189,7 +189,7 @@ class SatelitesCollection implements Iterator {
 	public function countWrongPostsPerPage() {
 		$amount = 0;
 		foreach ($this->array as $item) {
-			if ($item->blog()->wrongPostsPerPage()) {
+			if ($item->isMy() && $item->blog()->wrongPostsPerPage()) {
 				$amount ++;
 			}
 		}

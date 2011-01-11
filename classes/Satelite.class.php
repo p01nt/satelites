@@ -10,7 +10,20 @@ class Satelite {
 
 		$this->whois = new Whois($this->name);
 		$this->ns = new NS($this->name);
-		$this->blog = new Blog($this->name);
+		$this->blog = $this->__getSubInstance('Blog');
+	}
+
+	private function __getSubInstance($class) {
+		$memcache = Memcache::getInstance();
+		$var = 'class_' . $class . '_' . $this->name;
+		if ($memcache->exists($var)) {
+			return $memcache->get($var);
+		}
+		
+		$result = new $class($this->name);
+		$memcache->set($var, $result);
+
+		return $result;
 	}
 
 	public function getName() {

@@ -2,7 +2,15 @@
 class Blog {
 	protected $name = '';
 	protected $min_posts = 100;
-	protected $posts_per_page = 3;
+	protected $need_posts_per_page = 3;
+
+	protected $title = null;
+	protected $description = null;
+	protected $url = null;
+	protected $home_url = null;
+	protected $posts_per_page = null;
+	protected $posts_amount = null;
+	protected $isset_db = null;
 
 	public function __construct($name) {
 		$this->name = $name;
@@ -34,14 +42,21 @@ class Blog {
 	}
 
 	public function issetDatabase(){
-		$database = $this->getDBName();
+		if (isset($this->isset_db)) {
+			return $this->isset_db;
+		}
 
+		$database = $this->getDBName();
 		$rows = $this->__getDBList();
 		if (isset($rows[$database])) {
+			$this->isset_db = true;
 			return true;
 		}
 
-		return false;
+		$this->isset_db = false;
+		$this->__storeObject();
+
+		return $this->isset_db;
 	}
 
 	public function getDBName() {
@@ -73,6 +88,15 @@ class Blog {
 	}
 
 	public function postsAmount() {
+		if (empty($this->posts_amount)) {
+			$this->posts_amount = $this->__renewPostsAmount();
+			$this->__storeObject();
+		}
+
+		return $this->posts_amount;
+	}
+
+	private function __renewPostsAmount() {
 		if (!$this->issetDatabase()) {
 			return 0;
 		}
@@ -124,7 +148,7 @@ class Blog {
 	}
 
 	public function getNeedPostsPerPage() {
-		return $this->posts_per_page;
+		return $this->need_posts_per_page;
 	}
 
 	public function correctPostsPerPage() {
@@ -132,6 +156,15 @@ class Blog {
 	}
 
 	public function getURL() {
+		if (!isset($this->url)) {
+			$this->url = $this->__renewURL();
+			$this->__storeObject();
+		}
+
+		return $this->url;
+	}
+
+	private function __renewURL() {
 		if (!$this->issetDatabase()) {
 			return false;
 		}
@@ -142,6 +175,15 @@ class Blog {
 	}
 
 	public function getHomeURL() {
+		if (!isset($this->home_url)) {
+			$this->home_url = $this->__renewHomeURL();
+			$this->__storeObject();
+		}
+
+		return $this->home_url;
+	}
+
+	private function __renewHomeURL() {
 		if (!$this->issetDatabase()) {
 			return false;
 		}
@@ -166,18 +208,45 @@ class Blog {
 	}
 
 	public function getTitle() {
+		if (empty($this->title)) {
+			$this->title = $this->__renewTitle();
+			$this->__storeObject();
+		}
+
+		return $this->title;
+	}
+
+	private function __renewTitle() {
 		$db = DB::getInstance();
 		$row = $db->select()->from($this->getDBName() . '.`wp_options`')->where('option_name', '=', 'blogname')->fetchOne();
 		return $row->option_value;
 	}
 
 	public function getDescription() {
+		if (empty($this->description)) {
+			$this->description = $this->__renewDescription();
+			$this->__storeObject();
+		}
+
+		return $this->description;
+	}
+
+	private function __renewDescription() {
 		$db = DB::getInstance();
 		$row = $db->select()->from($this->getDBName() . '.`wp_options`')->where('option_name', '=', 'blogdescription')->fetchOne();
 		return $row->option_value;
 	}
 
 	public function getPostsPerPage() {
+		if (empty($this->posts_per_page)) {
+			$this->posts_per_page = $this->__renewPostsPerPage();
+			$this->__storeObject();
+		}
+
+		return $this->posts_per_page;
+	}
+
+	private function __renewPostsPerPage() {
 		if (!$this->issetDatabase()) {
 			return false;
 		}
@@ -199,6 +268,12 @@ class Blog {
 		$result = $db->query('insert into `' . $this->getDBName() . '`.`wp_posts` (`post_title`, `post_content`) select `title`, `body` from `satelites_data`.`posts` order by rand() limit ' . $limit);
 
 		return true;
+	}
+
+	private function __storeObject() {
+		$memcache = Memcache::getInstance();
+		$var = 'class_' . __CLASS__ . '_' . $this->name;
+		$memcache->set($var, $this);
 	}
 }
 ?>
