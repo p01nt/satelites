@@ -48,6 +48,10 @@ class NS {
 	public function getIP() {
 		$this->__updateIP();
 
+		if (preg_match('/(REFUSED|SERVFAIL|NXDOMAIN)$/', $this->data_ip[3])) {
+			return false;
+		}
+
 		if (preg_match('/^Address: (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/', $this->data_ip[5], $matches)) {
 			$this->ip = $matches[1];
 		}
