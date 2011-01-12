@@ -18,6 +18,10 @@ tr {
 	background-color: #EEEEEE;
 }
 
+tr.darker {
+	background-color: #CCCCCC;
+}
+
 tr:hover {
 	background-color: #DDDDDD;
 }

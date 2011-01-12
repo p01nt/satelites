@@ -1,3 +1,4 @@
+{assign var=domains_by_day value=3}
 <html>
 	<head>
 		<link href="/css/style.css" rel="stylesheet" />
@@ -56,6 +57,8 @@
 				<tr class="error"><td>Wrong Whois: </td><td>{$satelites->countWrongWhois()}</td></tr>
 			{/if}
 			<tr><td>Total: </td><td>{$satelites->countTotal()}</td></tr>
+			{assign var=forecast value=$smarty.now + ($satelites->countFree() - 1) / $domains_by_day * 3600 * 24}
+			<tr><td>Completion forecast date: </td><td>{$forecast|date_format}</td></tr>
 		</table>
 		{assign var=interval value=$timer->interval()}
 
@@ -95,8 +98,12 @@
 
 		<h1 id="onlyFree">Not registred</h1>
 		<table class="list">
-			{foreach from=$satelites->onlyFree() item=satelite}
-				<tr>
+			{foreach from=$satelites->onlyFree() item=satelite name=free}
+				{assign var=forecast_date value=$smarty.now + $smarty.foreach.free.index * 3600 * 24 / $domains_by_day}
+				<tr class="{if $smarty.foreach.free.index % ($domains_by_day * 2) lt $domains_by_day}darker{/if}">
+					{if $smarty.foreach.free.index % $domains_by_day eq 0}
+						<td rowspan="{$domains_by_day}">{$forecast_date|date_format}</td>
+					{/if}
 					<td>{$satelite->getName()}</td>
 					{*
 					<td class="{if !$satelite->ns()->isMyIPOnNeedNS()}error{/if}">{$satelite->ns()->printMyBadNeedNS()}</td>
