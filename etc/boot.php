@@ -1,5 +1,5 @@
 <?php
-	define('BASE', dirname(__FILE__) . '/..');
+	define('BASE', realpath(dirname(__FILE__) . '/..'));
 
 	error_reporting(E_ALL);
 	ini_set('display_errors', 'on');
