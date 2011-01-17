@@ -18,7 +18,6 @@ class Blog {
 
 	protected function __getDBList() {
 		$memcache = Memcache::getInstance();
-
 		$var = 'databases_list';
 
 		if ($memcache->exists($var)) {
@@ -27,6 +26,10 @@ class Blog {
 			return $result;
 		}
 
+		return $this->__renewDBList();
+	}
+
+	protected function __renewDBList() {
 		$db = DB::getInstance();
 		$rows = $db->databases()->fetch();
 
@@ -36,6 +39,8 @@ class Blog {
 			$result[$name] = $name;
 		}
 
+		$memcache = Memcache::getInstance();
+		$var = 'databases_list';
 		$memcache->set($var, $result);
 
 		return $result;
@@ -50,6 +55,8 @@ class Blog {
 		$rows = $this->__getDBList();
 		if (isset($rows[$database])) {
 			$this->isset_db = true;
+			$this->__storeObject();
+
 			return true;
 		}
 
@@ -57,6 +64,14 @@ class Blog {
 		$this->__storeObject();
 
 		return $this->isset_db;
+	}
+
+	public function updateDatabase() {
+		$this->isset_db = null;
+		$this->__renewDBList();
+		$this->issetDatabase();
+
+		return true;
 	}
 
 	public function getDBName() {
@@ -197,12 +212,18 @@ class Blog {
 		$db = DB::getInstance();
 		$row = $db->update($this->getDBName() . '.`wp_options`')->set('option_value', $this->getNeedURL())->where('option_name', '=', 'siteurl')->fetch();
 
+		$this->url = null;
+		$this->getURL();
+
 		return true;
 	}
 
 	public function updateHomeURL() {
 		$db = DB::getInstance();
 		$row = $db->update($this->getDBName() . '.`wp_options`')->set('option_value', $this->getNeedURL())->where('option_name', '=', 'home')->fetch();
+
+		$this->home_url = null;
+		$this->getHomeURL();
 
 		return true;
 	}
@@ -217,6 +238,10 @@ class Blog {
 	}
 
 	private function __renewTitle() {
+		if (!$this->issetDatabase()) {
+			return false;
+		}
+
 		$db = DB::getInstance();
 		$row = $db->select()->from($this->getDBName() . '.`wp_options`')->where('option_name', '=', 'blogname')->fetchOne();
 		return $row->option_value;
@@ -232,6 +257,10 @@ class Blog {
 	}
 
 	private function __renewDescription() {
+		if (!$this->issetDatabase()) {
+			return false;
+		}
+
 		$db = DB::getInstance();
 		$row = $db->select()->from($this->getDBName() . '.`wp_options`')->where('option_name', '=', 'blogdescription')->fetchOne();
 		return $row->option_value;
@@ -260,12 +289,18 @@ class Blog {
 		$db = DB::getInstance();
 		$row = $db->update($this->getDBName() . '.`wp_options`')->set('option_value', $this->getNeedPostsPerPage())->where('option_name', '=', 'posts_per_page')->fetch();
 
+		$this->posts_per_page = null;
+		$this->getPostsPerPage(); 
+
 		return true;
 	}
 
 	public function generatePosts($limit = 100) {
 		$db = DB::getInstance();
 		$result = $db->query('insert into `' . $this->getDBName() . '`.`wp_posts` (`post_title`, `post_content`) select `title`, `body` from `satelites_data`.`posts` order by rand() limit ' . $limit);
+
+		$this->posts_amount = null;
+		$this->postsAmount();
 
 		return true;
 	}

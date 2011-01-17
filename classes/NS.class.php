@@ -32,6 +32,10 @@ class NS {
 		$this->__renewIP();
 	}
 
+	public function updateIP() {
+		return $this->__renewIP();
+	}
+
 	protected function __renewIP() {
 		$cmd = 'nslookup ' . $this->name;
 

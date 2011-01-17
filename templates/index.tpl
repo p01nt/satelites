@@ -85,11 +85,41 @@
 					<td class="{if !$satelite->ns()->isMyIP()}error{/if}">{if $satelite->ns()->getIP()}{$satelite->ns()->getIP()}{else}can't detect ip{/if}</td>
 					<td class="{if !$satelite->ns()->isMyIPOnNeedNS()}error{/if}">{$satelite->ns()->printMyBadNeedNS()}</td>
 					<td class="{if !$satelite->blog()->issetDatabase()}error{/if}">{if $satelite->blog()->issetDatabase()}{$satelite->blog()->getDBName()}{else}database non-exists{/if}</td>
-					<td class="{if $satelite->blog()->wrongURL()}error{/if}">{$satelite->blog()->getURL()}</td>
-					<td class="{if $satelite->blog()->wrongHomeURL()}error{/if}">{$satelite->blog()->getHomeURL()}</td>
-					<td class="{if $satelite->blog()->wrongTitle()}error{/if}">{$satelite->blog()->getTitle()}</td>
-					<td class="{if $satelite->blog()->wrongDescription()}error{/if}">{$satelite->blog()->getDescription()}</td>
-					<td class="{if $satelite->blog()->wrongPostsPerPage()}error{/if}">{$satelite->blog()->getPostsPerPage()}</td>
+					<td class="{if $satelite->blog()->wrongURL()}error{/if}">
+						{if $satelite->blog()->getURL()}
+							{$satelite->blog()->getURL()}
+						{else}
+							-
+						{/if}
+					</td>
+					<td class="{if $satelite->blog()->wrongHomeURL()}error{/if}">
+						{if $satelite->blog()->getHomeURL()}
+							{$satelite->blog()->getHomeURL()}
+						{else}
+							-
+						{/if}
+					</td>
+					<td class="{if $satelite->blog()->wrongTitle()}error{/if}">
+						{if $satelite->blog()->getTitle()}
+							{$satelite->blog()->getTitle()}
+						{else}
+							-
+						{/if}
+					</td>
+					<td class="{if $satelite->blog()->wrongDescription()}error{/if}">
+						{if $satelite->blog()->getDescription()}
+							{$satelite->blog()->getDescription()}
+						{else}
+							-
+						{/if}
+					</td>
+					<td class="{if $satelite->blog()->wrongPostsPerPage()}error{/if}">
+						{if $satelite->blog()->getPostsPerPage()}
+							{$satelite->blog()->getPostsPerPage()}
+						{else}
+							-
+						{/if}
+					</td>
 					<td class="{if $satelite->blog()->noEnoughPosts()}error{/if}">{$satelite->blog()->postsAmount()}</td>
 				</tr>
 			{/foreach}
