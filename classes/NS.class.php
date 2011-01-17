@@ -146,6 +146,7 @@ class NS {
 			return 'ok';
 		}
 
+		$servers = array_unique($servers);
 		return implode(', ', $servers);
 	}
 
